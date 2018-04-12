@@ -1,0 +1,10 @@
+[Unit]
+Description=startup openvpn
+
+[Service]
+User=root
+ExecStart= openvpn /etc/openvpn/server/aws.server.conf 
+
+[Install]
+WantedBy=default.target
+
