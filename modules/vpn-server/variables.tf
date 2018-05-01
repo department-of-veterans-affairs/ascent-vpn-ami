@@ -28,8 +28,21 @@ variable "subnet_ids" {
   description = "The subnet IDs into which the EC2 instances should be deployed."
   type        = "list"
 }
+
 variable "eip_address" {
   description = "EIP setup for VPN server"
+}
+
+variable "master_dns_ip" {
+  description = "Master DNS IP for VPN server config"
+}
+
+variable "slave_dns_ip" {
+  description = "Slave DNS IP for VPN server config"
+}
+
+variable "vpc_cidr" {
+  description = "vpc cidrs for VPN server config"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

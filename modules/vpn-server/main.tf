@@ -20,8 +20,7 @@ resource "aws_instance" "vpn" {
   key_name                    = "${var.ssh_key_name}"
   subnet_id                   = "${var.subnet_ids[length(var.subnet_ids) - 1]}"
   vpc_security_group_ids      = ["${aws_security_group.vpn_security_group.id}"]
-#  user_data                   = "${var.user_data == "" ? data.template_file.vpn_user_data.rendered : var.user_data}"
-  iam_instance_profile        = "${aws_iam_instance_profile.instance_profile.name}"
+  user_data                   = "${var.user_data == "" ? data.template_file.vpn_user_data.rendered : var.user_data}"
   tags {
       Name = "${var.instance_name}"
   }
@@ -55,39 +54,13 @@ module "security_group_rules" {
 # Default User Data script
 # ---------------------------------------------------------------------------------------------------------------------
 
-#data "template_file" "vpn_user_data" {
-#  template = "${file("${path.module}/vpn-user-data.sh")}"
+data "template_file" "vpn_user_data" {
+ template = "${file("${path.module}/vpn-user-data.sh")}"
 
-#  vars {
-#  }
-#}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ATTACH AN IAM ROLE TO THE VPN INSTANCE
-# We can use an IAM role to grant the instance IAM permissions so we can use the AWS CLI without having to figure out
-# how to get our secret AWS access keys onto the box.
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_iam_instance_profile" "instance_profile" {
-  name_prefix  = "${var.instance_name}"
-  path         = "${var.instance_profile_path}"
-  role         = "${aws_iam_role.instance_role.name}"
-}
-
-resource "aws_iam_role" "instance_role" {
-  name_prefix        = "${var.instance_name}"
-  assume_role_policy = "${data.aws_iam_policy_document.instance_role.json}" 
-}
-
-data "aws_iam_policy_document" "instance_role" {
-  statement {
-    effect   = "Allow"
-    actions  = ["sts:AssumeRole"]
-
-    principals {
-      type           = "Service"
-      identifiers    = ["ec2.amazonaws.com"]
-    } 
+  vars {
+    master_dns_ip             = "${var.master_dns_ip}"
+    slave_dns_ip              = "${var.slave_dns_ip}"
+    vpc_cidr                  = "${var.vpc_cidr}"
   }
 }
 
