@@ -1,5 +1,5 @@
 output "vpn_eip" {
-  value = "${var.eip_address}"
+  value = "${aws_instance.vpn.public_ip}"
 }
 
 output "security_group_id" {
