@@ -127,3 +127,8 @@ variable "instance_profile_path" {
   description = "Path in which to create the IAM instance profile"
   default     = "/"
 }
+
+variable "vpn_client_subnet" {
+  description = "Subnet of IPs that will be assigned to VPN clients. Ex. 10.8.0.0"
+  default     = "10.8.0.0"
+}

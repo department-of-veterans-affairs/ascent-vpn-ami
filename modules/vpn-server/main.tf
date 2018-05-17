@@ -21,6 +21,7 @@ resource "aws_instance" "vpn" {
   subnet_id                   = "${var.subnet_ids[length(var.subnet_ids) - 1]}"
   vpc_security_group_ids      = ["${aws_security_group.vpn_security_group.id}"]
   user_data                   = "${var.user_data == "" ? data.template_file.vpn_user_data.rendered : var.user_data}"
+  source_dest_check           = false
   tags {
       Name = "${var.instance_name}"
   }
@@ -61,6 +62,7 @@ data "template_file" "vpn_user_data" {
     master_dns_ip             = "${var.master_dns_ip}"
     slave_dns_ip              = "${var.slave_dns_ip}"
     vpc_cidr                  = "${var.vpc_cidr}"
+    vpn_client_subnet         = "${var.vpn_client_subnet}"
   }
 }
 
