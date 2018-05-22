@@ -37,4 +37,10 @@ sed -i -e 's/VPN_CLIENT_SUBNET/'$VPN_CLIENT_SUBNET'/g' /tmp/aws.server.conf
 # ######################################### 
 
 sudo systemctl start openvpn-server@aws.service
+
+# ######################################### 
+# Configure IP tables
+# ######################################### 
  
+sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+sudo sysctl -w net.ipv4.ip_forward=1
